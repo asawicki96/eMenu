@@ -31,6 +31,7 @@ class CardViewSet(viewsets.ModelViewSet):
 
 
     def get_serializer_class(self):
+        """ Returns proper serializer for each action """
         
         if self.action == "list":
             return serializers.CardListSerializer
