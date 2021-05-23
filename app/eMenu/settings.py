@@ -83,6 +83,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eMenu.wsgi.application'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_MAIL = 'emenu@emenu.pl'
 
 
 # Database

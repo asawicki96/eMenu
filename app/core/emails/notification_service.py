@@ -14,7 +14,7 @@ class EmailNotificationService:
         context = EmailNotificationService._get_context(notification)
 
         if not EmailNotificationService._validate(context):
-            logger.error(f"EmailNotification context validation failed. Sending email skipped. Corrupted data: {str(context)}")
+            logger.debug(f"EmailNotification context validation failed. Sending email skipped. Corrupted data: {str(context)}")
             return False
 
         message = EmailNotificationService._get_message(
@@ -43,7 +43,6 @@ class EmailNotificationService:
             return None
 
     def _validate(context: dict) -> bool:
-        return True
         required_keys = ('subject', 'email_plaintext_message', 'email_html_message', 'from_mail' ,'recipients')
 
         if not context:
@@ -54,6 +53,9 @@ class EmailNotificationService:
             if not key in context or context[key] == None or context[key] == "":
                 return False
         
+        if not context["recipients"]:
+            return False
+
         for recipient in context["recipients"]:
             
             if not isinstance(recipient, str):
