@@ -43,7 +43,7 @@ services:
             
     celery:
         build: .
-        command: sh -c "celery -A eMenu worker -l info"
+        command: sh -c "celery -A eMenu worker -l info --uid=nobody --gid=nogroup"
 
         env_file: 
             - cfg.env
