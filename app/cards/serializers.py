@@ -15,17 +15,32 @@ class CardListSerializer(serializers.ModelSerializer):
 class CardSerializer(CardListSerializer):
     """ Serializer for card object presented in detail view"""
 
-    dishes = DishSerializer(many=True, write_only=True)
+    dishes = DishSerializer(many=True, write_only=True, required=False)
 
     class Meta(CardListSerializer.Meta):
         fields = CardListSerializer.Meta.fields + ('dishes',)
 
     
     def create(self, validated_data):
-        dishes_data = validated_data.pop('dishes')
+        dishes_data = []
+
+        if 'dishes' in validated_data:
+            dishes_data = validated_data.pop('dishes')
 
         card = Card.objects.create(**validated_data)
+        self._create_dishes(dishes_data, card)
     
+        return card
+
+
+    def _create_dishes(self, dishes_data: list, card: Card):
+        
+        if not dishes_data:
+            return
+
+        if not isinstance(dishes_data, list):
+            return
+
         for dish_data in dishes_data:
             dish_serializer = DishSerializer(data=dish_data)
     
@@ -34,10 +49,5 @@ class CardSerializer(CardListSerializer):
                 new_dish = dish_serializer.create(dish_serializer.validated_data)
                 new_dish.card = card
                 new_dish.save()
-    
-        return card
-
-
-
 
 

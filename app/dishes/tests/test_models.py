@@ -19,15 +19,15 @@ class DishModelTests(TestCase):
             "name": "Example",
             "description": "Example description",
             "price": 1.01,
-            "preparation_time": "00:00:01"
+            "preparation_time": timedelta(seconds=1)
         }
 
     
     def test_slug_populated_from_name_on_object_create(self):
         """ Test if slug populates from name on create """
 
-        dish = Dish.objects.create(**self.example_data)
-        exists = Dish.objects.filter(**self.example_data).exists()
+        dish = create_dish(**self.example_data)
+        exists = Dish.objects.filter(pk=dish.pk).exists()
 
         self.assertTrue(exists)
         self.assertEqual(dish.slug, slugify(dish.name))
@@ -44,7 +44,7 @@ class DishModelTests(TestCase):
             "name": "Recent", 
             "description": "Recent dish description", 
             "price": 1.01, 
-            "preparation_time": "00:00:01"
+            "preparation_time": timedelta(seconds=1)
         }
 
         not_expected_recent_dish = create_dish(**self.example_data)

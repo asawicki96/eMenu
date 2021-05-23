@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
+from datetime import timedelta
 
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -24,7 +25,7 @@ class PublicDishesAPITests(TestCase):
             "name": "Example",
             "description": "Example description",
             "price": 1.01,
-            "preparation_time": "00:00:01",
+            "preparation_time": timedelta(seconds=1),
         }
 
     def test_create_dish_as_anon_user_fails(self):
@@ -59,7 +60,7 @@ class PrivateDishesAPITests(TestCase):
             "name": "Example",
             "description": "Example description",
             "price": 1.01,
-            "preparation_time": "00:00:01",
+            "preparation_time": timedelta(seconds=1),
         }
 
         self.client = APIClient()
@@ -72,7 +73,7 @@ class PrivateDishesAPITests(TestCase):
 
         response = self.client.post(LIST_CREATE_DISH_URL, self.example_payload)
 
-        exists = Dish.objects.filter(**response.data).exists()
+        exists = Dish.objects.filter(pk=response.data["id"]).exists()
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(exists)
@@ -87,7 +88,7 @@ class PrivateDishesAPITests(TestCase):
             "name": "Changed",
             "description": "Changed description",
             "price": 1.02,
-            "preparation_time": "00:00:02",
+            "preparation_time": timedelta(seconds=2),
         }
 
         response = self.client.patch(get_detail_url(existing_obj.slug), update_payload)
