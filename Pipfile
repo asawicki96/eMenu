@@ -10,6 +10,7 @@ django-filter = "*"
 celery = {extras = ["redis"], version = "*"}
 psycopg2 = "*"
 coverage = "*"
+drf-yasg = "*"
 
 [dev-packages]
 
