@@ -6,7 +6,7 @@ Installation:
 
 - Install docker & docker compose.
 - Clone this repo.
--
+
 - Make sure You have 8000 port on Your localhost free.
 - Make sure You have 5432 port on Your localhost free.
 - Make sure You have 6379 port on Your localhost free.
@@ -35,7 +35,7 @@ Authentication:
 - Create, Update, Delete actions are allowed with Authorization header only.
 - List, Retrieve actions are allowed to everybody.
 
-- Authentication flow:
+Authentication flow:
 - User has to send his credentials which is username & password to token obtain endpoint
 - The response contains auth token.
 - User has to send received token with each request to protected endpoints.
