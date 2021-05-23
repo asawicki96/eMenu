@@ -11,10 +11,8 @@ from cards.filters import CardFilter
 class CardViewSet(viewsets.ModelViewSet):
     """ Manage cards in database """
 
-    lookup_field = 'slug'
     filterset_class = CardFilter
-
-
+    
     def get_queryset(self):
         """ Returns card objects that contains any dishes only for list view
             Returns all card object for other views

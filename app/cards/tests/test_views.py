@@ -16,8 +16,8 @@ import logging
 
 LIST_CREATE_CARD_URL = reverse('cards:cards-list')
 
-def get_detail_url(slug):
-    return reverse('cards:cards-detail', kwargs={"slug": slug})
+def get_detail_url(pk):
+    return reverse('cards:cards-detail', kwargs={"pk": pk})
 
 
 class PublicCardsAPITests(TestCase):
@@ -43,7 +43,7 @@ class PublicCardsAPITests(TestCase):
 
         existing_obj = create_card(**self.example_payload)
         
-        response = self.client.get(get_detail_url(existing_obj.slug))
+        response = self.client.get(get_detail_url(existing_obj.pk))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["id"], existing_obj.pk)
@@ -114,7 +114,7 @@ class PrivateCardsAPITests(TestCase):
             "description": "Changed description",
         }
 
-        response = self.client.patch(get_detail_url(existing_obj.slug), update_payload)
+        response = self.client.patch(get_detail_url(existing_obj.pk), update_payload)
 
         updated_obj = Card.objects.get(pk=existing_obj.pk)
 

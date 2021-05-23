@@ -8,6 +8,9 @@ from dishes.models import Dish, dish_image_file_path
 from dishes.tests.helpers import create_dish
 from django.conf import settings
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 recent_timedelta = settings.RECENT_DISH_TIMEDELTA
 

@@ -16,13 +16,13 @@ from dishes.tests.helpers import create_dish
 
 LIST_CREATE_DISH_URL = reverse('dishes:dishes-list')
 
-def get_detail_url(slug):
-    return reverse('dishes:dishes-detail', kwargs={"slug": slug})
+def get_detail_url(pk):
+    return reverse('dishes:dishes-detail', kwargs={"pk": pk})
 
-def image_upload_url(dish_slug):
+def image_upload_url(dish_pk):
     """ Return URL for dish image upload """
 
-    return reverse('dishes:dishes-upload-image', args=[dish_slug])
+    return reverse('dishes:dishes-upload-image', args=[dish_pk])
 
 class PublicDishesAPITests(TestCase):
 
@@ -49,7 +49,7 @@ class PublicDishesAPITests(TestCase):
 
         existing_obj = create_dish(**self.example_payload)
         
-        response = self.client.get(get_detail_url(existing_obj.slug))
+        response = self.client.get(get_detail_url(existing_obj.pk))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["id"], existing_obj.pk)
@@ -99,7 +99,7 @@ class PrivateDishesAPITests(TestCase):
             "preparation_time": timedelta(seconds=2),
         }
 
-        response = self.client.patch(get_detail_url(existing_obj.slug), update_payload)
+        response = self.client.patch(get_detail_url(existing_obj.pk), update_payload)
 
         updated_obj = Dish.objects.get(pk=existing_obj.pk)
 
@@ -131,7 +131,7 @@ class DishImageUploadTests(TestCase):
     def test_upload_image_to_dish(self):
         """ Test uploading an image to dish """
 
-        url = image_upload_url(self.dish.slug)
+        url = image_upload_url(self.dish.pk)
 
         with tempfile.NamedTemporaryFile(suffix=".jpg") as named_temp_file:
             img = Image.new('RGB', (10, 10))
@@ -151,7 +151,7 @@ class DishImageUploadTests(TestCase):
     def test_upload_image_bad_request(self):
         """ Test uploading invalid image """
 
-        url = image_upload_url(self.dish.slug)
+        url = image_upload_url(self.dish.pk)
 
         response = self.client.post(url, {'image': 'not image'}, format='multipart')
 
