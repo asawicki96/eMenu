@@ -21,3 +21,12 @@ class DishSerializer(serializers.ModelSerializer):
         )
 
         read_only_fields = ('id', 'slug', 'created_at', 'modified_at')
+
+
+class DishImageSerializer(serializers.ModelSerializer):
+    """ Serializer for uploading images to dishes """
+
+    class Meta:
+        model = Dish
+        fields = ('slug', 'image')
+        read_only_fields = ('slug',)

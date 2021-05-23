@@ -3,10 +3,21 @@ from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
 from django.utils.text import slugify
+import uuid
+import os
 import logging
 
 logger = logging.getLogger(__name__)
 
+
+
+def dish_image_file_path(instance, filename):
+    """ Generate file path for new dish image """
+
+    extension = filename.split('.')[-1]
+    filename = f'{uuid.uuid4()}.{extension}'
+
+    return os.path.join('uploads/dish/', filename)
 
 # Create your models here.
 
@@ -24,6 +35,8 @@ class Dish(models.Model):
     price = models.DecimalField(verbose_name="Cena", max_digits=6, decimal_places=2)
     preparation_time = models.DurationField(verbose_name="Czas przygotowania")
     is_vege = models.BooleanField(verbose_name="Wegetariańskie", default=False)
+
+    image = models.ImageField(null=True, upload_to=dish_image_file_path)
 
     created_at = models.DateTimeField(verbose_name="Data utworzenia", auto_now_add=True)
     modified_at = models.DateTimeField(verbose_name="Data ostatniej modyfikacji", auto_now=True)

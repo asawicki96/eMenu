@@ -4,7 +4,7 @@ from django.utils import timezone
 from datetime import timedelta
 from unittest import mock
 
-from dishes.models import Dish
+from dishes.models import Dish, dish_image_file_path
 from dishes.tests.helpers import create_dish
 from django.conf import settings
 
@@ -59,3 +59,16 @@ class DishModelTests(TestCase):
         self.assertEqual(len(recent_dishes), 1)
         self.assertIsInstance(recent_dishes, list)
         self.assertEqual(recent_dishes[0].pk, recent_dish.pk)
+
+    @mock.patch('uuid.uuid4')
+    def test_dish_filename_uuid(self, mock_uuid):
+        """ Test that image is saved in the correct location """
+
+        uuid = 'test_uuid'
+        mock_uuid.return_value = uuid
+
+        file_path = dish_image_file_path(None, 'exampleimage.jpg')
+
+        expected_path = f'uploads/dish/{uuid}.jpg'
+
+        self.assertEqual(file_path, expected_path)
