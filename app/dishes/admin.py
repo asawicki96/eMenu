@@ -6,4 +6,3 @@ from dishes import models
 @admin.register(models.Dish)
 class DishAdmin(admin.ModelAdmin):
     model = models.Dish
-    prepopulated_fields = {"slug": ("name",)}
