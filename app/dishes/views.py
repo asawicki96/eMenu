@@ -12,7 +12,6 @@ from dishes import serializers
 class DishViewSet(viewsets.ModelViewSet):
     """ Manage dishes in database """
 
-    lookup_field = 'slug'
     queryset = Dish.objects.all()
     serializer_class = serializers.DishSerializer
 
@@ -31,7 +30,7 @@ class DishViewSet(viewsets.ModelViewSet):
 
     @parser_classes((MultiPartParser,))
     @action(detail=True, methods=("POST",), url_path='upload-image')
-    def upload_image(self, request, slug=None):
+    def upload_image(self, request, pk=None):
         """ Upload an image to dish """
 
         dish = self.get_object()
