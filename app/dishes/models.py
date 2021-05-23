@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
+from django.utils.text import slugify
 import logging
 
 logger = logging.getLogger(__name__)
@@ -12,7 +13,7 @@ class Dish(models.Model):
     """ Dish to be used in menu card """ 
 
     name = models.CharField(verbose_name="Nazwa", max_length=255, unique=True)
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, editable=False)
 
     card = models.ForeignKey(verbose_name="Karta", to="cards.Card", 
                              related_name="dishes", on_delete=models.SET_NULL, 
@@ -34,14 +35,23 @@ class Dish(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        """ Custom save method to populate slug from name """
+        
+        self.slug = slugify(self.name)
+        
+        super().save(*args, **kwargs)
+
     @classmethod
     def get_recent_objs(cls) -> list:
         """ Returns list of recent created or updated Dish objects."""
         
         recent_timedelta = settings.RECENT_DISH_TIMEDELTA
         recent_objs_queryset = cls.objects.filter(modified_at__date=(timezone.now() - recent_timedelta).date())
+
         try:
             return [obj for obj in recent_objs_queryset]
+
         except Exception as e:
             logger.error(e)
             return None

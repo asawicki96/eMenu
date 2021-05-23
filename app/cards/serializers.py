@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.utils.text import slugify
 
 from cards.models import Card
 from dishes.serializers import DishSerializer
@@ -24,8 +23,6 @@ class CardSerializer(CardListSerializer):
     
     def create(self, validated_data):
         dishes_data = validated_data.pop('dishes')
-
-        validated_data["slug"] = slugify(validated_data["name"])
 
         card = Card.objects.create(**validated_data)
     
