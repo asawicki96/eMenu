@@ -31,27 +31,29 @@ class BaseEmailNotificationClass(ABC):
 class RecentDishesEmailNotification(BaseEmailNotificationClass):
 
     def __init__(self):
-        self._context = self.get_context()
+        self._context = None
 
     def get_subject(self) -> str:
         return "Aktualizacja karty w aplikacji eMenu."
 
     def get_plaintext_message(self) -> str:
-        rendered = render_to_string('emails/recent_dishes_notification/notification.txt', self._context)
+        rendered = render_to_string('emails/recent_dishes_notification/notification.txt', self.context)
+
         return rendered
     
 
     def get_html_message(self) -> str:
-        rendered = render_to_string('emails/recent_dishes_notification/notification.html', self._context)
+        rendered = render_to_string('emails/recent_dishes_notification/notification.html', self.context)
         return rendered
 
     def get_recipients(self) -> list:
         return [user.email for user in get_user_model().objects.all()]
 
     @property
-    def get_context(self) -> dict:
+    def context(self) -> dict:
 
-        if self._context == None:
+        if not self._context:
+
             self._context = {"recent_dishes": Dish.get_recent_objs()}
 
         return self._context

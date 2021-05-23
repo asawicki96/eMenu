@@ -39,9 +39,9 @@ class Dish(models.Model):
         """ Returns list of recent created or updated Dish objects."""
         
         recent_timedelta = settings.RECENT_DISH_TIMEDELTA
-
+        recent_objs_queryset = cls.objects.filter(modified_at__date=(timezone.now() - recent_timedelta).date())
         try:
-            return [obj for obj in cls.objects.filter(modified_at__date=(timezone.now() - recent_timedelta).date)]
+            return [obj for obj in recent_objs_queryset]
         except Exception as e:
             logger.error(e)
             return None

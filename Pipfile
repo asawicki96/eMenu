@@ -8,6 +8,7 @@ django = "*"
 djangorestframework = "*"
 django-filter = "*"
 celery = {extras = ["redis"], version = "*"}
+psycopg2 = "*"
 
 [dev-packages]
 
