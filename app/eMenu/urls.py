@@ -24,9 +24,9 @@ schema_view = get_schema_view(
    openapi.Info(
       title="e-Menu API",
       default_version='v1',
-      description="Cards & Dishes manage API",
+      description="Cards & Dishes management API",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="emenu@emenu.pl"),
+      contact=openapi.Contact(email="emenu@emenu.local"),
       license=openapi.License(name="MIT License"),
    ),
    public=True,
