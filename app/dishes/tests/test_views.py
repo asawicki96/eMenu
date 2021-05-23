@@ -3,6 +3,10 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from datetime import timedelta
+import tempfile
+import os
+
+from PIL import Image
 
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -15,6 +19,10 @@ LIST_CREATE_DISH_URL = reverse('dishes:dishes-list')
 def get_detail_url(slug):
     return reverse('dishes:dishes-detail', kwargs={"slug": slug})
 
+def image_upload_url(dish_slug):
+    """ Return URL for dish image upload """
+
+    return reverse('dishes:dishes-upload-image', args=[dish_slug])
 
 class PublicDishesAPITests(TestCase):
 
@@ -100,4 +108,51 @@ class PrivateDishesAPITests(TestCase):
 
     
 
+class DishImageUploadTests(TestCase):
 
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user('user@emenu.pl', 'testpass')
+
+        self.client.force_authenticate(self.user)
+
+        self.example_data = {
+            "name": "Example",
+            "description": "Example description",
+            "price": 1.01,
+            "preparation_time": timedelta(seconds=1),
+        }
+
+        self.dish = create_dish(**self.example_data)
+
+    def tearDown(self):
+        self.dish.image.delete()
+
+    def test_upload_image_to_dish(self):
+        """ Test uploading an image to dish """
+
+        url = image_upload_url(self.dish.slug)
+
+        with tempfile.NamedTemporaryFile(suffix=".jpg") as named_temp_file:
+            img = Image.new('RGB', (10, 10))
+            img.save(named_temp_file, format='JPEG')
+
+            named_temp_file.seek(0)
+
+            response = self.client.post(url, {'image': named_temp_file}, format='multipart')
+
+        self.dish.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('image', response.data)
+        self.assertTrue(os.path.exists(self.dish.image.path))
+
+
+    def test_upload_image_bad_request(self):
+        """ Test uploading invalid image """
+
+        url = image_upload_url(self.dish.slug)
+
+        response = self.client.post(url, {'image': 'not image'}, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
