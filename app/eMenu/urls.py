@@ -19,7 +19,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('cards.urls')),
-    path('api/', include('dishes.urls')),
+    path('api/', include('cards.urls', namespace='cards')),
+    path('api/', include('dishes.urls', namespace='dishes')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]
