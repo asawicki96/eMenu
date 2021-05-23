@@ -1,8 +1,8 @@
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets, status
 from rest_framework import filters
 from rest_framework.decorators import action, parser_classes
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser
 
 from dishes.models import Dish
 from dishes import serializers
@@ -15,12 +15,11 @@ class DishViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     queryset = Dish.objects.all()
     serializer_class = serializers.DishSerializer
-    parser_classes = (MultiPartParser,)
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'description']
     ordering_fields = ['name', 'created_at', 'modified_at']
-    
+
 
     def get_serializer_class(self):
         """ Return proper serializer class """
@@ -30,7 +29,7 @@ class DishViewSet(viewsets.ModelViewSet):
         
         return self.serializer_class
 
-    
+    @parser_classes((MultiPartParser,))
     @action(detail=True, methods=("POST",), url_path='upload-image')
     def upload_image(self, request, slug=None):
         """ Upload an image to dish """
@@ -45,5 +44,3 @@ class DishViewSet(viewsets.ModelViewSet):
             serializer.save()
 
             return Response(serializer.data, status=status.HTTP_200_OK)
-
-

@@ -11,5 +11,5 @@ router.register('dishes', views.DishViewSet, basename='dishes')
 
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
 ]
