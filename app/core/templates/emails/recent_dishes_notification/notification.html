@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+    </head>
+    <body>
+        <h4>Lista nowo dodanych lub zmodyfikowanych przepisów.</h4>
+        <ul>
+            {% for dish in recent_dishes %}
+                <li>
+                    <b>Nazwa: </b> {{ dish.name }}
+                </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

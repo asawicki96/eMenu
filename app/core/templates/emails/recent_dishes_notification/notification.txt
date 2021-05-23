@@ -1,0 +1,6 @@
+
+Lista nowo dodanych lub zmodyfikowanych przepisów.
+
+{% for dish in recent_dishes %}
+    Nazwa: {{ dish.name }}
+{% endfor %}
