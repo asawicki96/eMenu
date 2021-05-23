@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,6 +80,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'eMenu.wsgi.application'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -126,6 +129,19 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'core.pagination.StandardResultsSetPagination',
 }
 
+
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Europe/Warsaw"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+#CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', default='localhost://redis:6379')
+#CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', default='redis://redis:6379')
+#CELERY_ACCEPT_CONTENT = os.getenv('CELERY_ACCEPT_CONTENT', default=['application/json'])
+#CELERY_TASK_SERIALIZER = os.getenv('CELERY_TASK_SERIALIZER', default='json')
+#CELERY_RESULT_SERIALIZER = os.getenv('CELERY_RESULT_SERIALIZER', default='json')
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -149,3 +165,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+RECENT_DISH_TIMEDELTA = timedelta(days=1)

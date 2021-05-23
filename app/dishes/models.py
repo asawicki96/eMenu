@@ -1,4 +1,10 @@
 from django.db import models
+from django.utils import timezone
+from datetime import timedelta
+from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Create your models here.
 
@@ -27,3 +33,15 @@ class Dish(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_recent_objs(cls) -> list:
+        """ Returns list of recent created or updated Dish objects."""
+        
+        recent_timedelta = settings.RECENT_DISH_TIMEDELTA
+
+        try:
+            return [obj for obj in cls.objects.filter(modified_at__date=(timezone.now() - recent_timedelta).date)]
+        except Exception as e:
+            logger.error(e)
+            return None
