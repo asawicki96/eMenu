@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod, abstractproperty
 from dishes.models import Dish
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
+from django.conf import settings
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ class BaseEmailNotificationClass(ABC):
         pass
 
     def get_from_mail(self) -> str:
-        return 'emenu@gmail.com'
+        return settings.DEFAULT_FROM_MAIL
 
     @abstractmethod
     def get_recipients(self) -> list:

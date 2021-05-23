@@ -13,8 +13,7 @@ def send_recent_dishes_email_notification():
 
         result = EmailNotificationService.send_notification(notification)
         
-        if result:
-            return True
+        return result
         
     return False
     
